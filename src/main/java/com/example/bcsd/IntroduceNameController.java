@@ -14,4 +14,5 @@ public class IntroduceNameController {
     public String introduce(@RequestParam(name = "name", required = true) String name) {
         return "안녕하세요 제 이름은 " + name + "입니다!";
     }
+
 }
