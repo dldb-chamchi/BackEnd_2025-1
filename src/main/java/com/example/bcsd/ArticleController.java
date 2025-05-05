@@ -25,10 +25,10 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        int id = idCounter++;
-        article.setId(id);
-        struct.put(id, article);
-        return ResponseEntity.created(URI.create("/article/" + id)).body(article);
+        int newId = idCounter++;
+        article.setId(newId);
+        struct.put(newId, article);
+        return ResponseEntity.created(URI.create("/article/" + newId)).body(article);
     }
 
     @PutMapping("/{id}")
