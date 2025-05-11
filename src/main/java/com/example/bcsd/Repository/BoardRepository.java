@@ -14,7 +14,6 @@ public class BoardRepository {
     public Optional<Board> findById(int id) {
         return Optional.ofNullable(struct.get(id));
     }
-
     public Board save(Board board) {
         int id = idCounter++;
         board.setBoardId(id);
