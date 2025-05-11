@@ -16,7 +16,7 @@ public class ArticleService {
         this.repository = repository;
     }
 
-    public List<Article> getAllArticles() {
+    public List<Article> getAllArticles() { //모든 아티클 보기
         return repository.findAll();
     }
 
