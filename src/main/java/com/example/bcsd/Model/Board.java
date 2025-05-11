@@ -20,4 +20,5 @@ public class Board {
         if(boardTitle == null) { throw new RuntimeException(); }
         this.boardTitle = boardTitle;
     }
+
 }
