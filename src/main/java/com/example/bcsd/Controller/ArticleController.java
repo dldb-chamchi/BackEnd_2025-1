@@ -26,7 +26,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getOne(@PathVariable int id) {
+    public ResponseEntity<Article> getById(@PathVariable int id) {
         try {
             Article article = service.getArticleById(id);
             return ResponseEntity.ok(article);
