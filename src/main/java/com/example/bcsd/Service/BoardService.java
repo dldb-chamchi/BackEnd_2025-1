@@ -26,4 +26,5 @@ public class BoardService {
         List<ArticleDto> articles = boardDao.findArticlesByBoardId(boardId);
         return new BoardPostsDto(boardName, articles);
     }
+
 }
