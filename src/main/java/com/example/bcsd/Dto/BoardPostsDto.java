@@ -1,7 +1,4 @@
 package com.example.bcsd.Dto;
-
-import com.example.bcsd.Dto.ArticleDto;
-
 import java.util.List;
 
 public class BoardPostsDto {
@@ -20,4 +17,5 @@ public class BoardPostsDto {
     public List<ArticleDto> getArticles() {
         return articles;
     }
+
 }
