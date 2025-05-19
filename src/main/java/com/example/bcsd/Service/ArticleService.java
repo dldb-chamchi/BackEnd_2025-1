@@ -18,10 +18,12 @@ public class ArticleService {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     public List<Article> getAllArticles() { //모든 아티클 보기
         return repository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Article getArticleById(int id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(""));

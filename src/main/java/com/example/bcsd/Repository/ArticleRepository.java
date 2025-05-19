@@ -3,6 +3,7 @@ package com.example.bcsd.Repository;
 import com.example.bcsd.Model.Article;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,7 @@ public class ArticleRepository {
         return findById(newId).orElseThrow();
     }
 
+    @Transactional
     public Article update(int id, Article a) {
         jdbc.update(
                 "UPDATE article SET title = ?, content = ? WHERE id = ?",
@@ -80,6 +82,7 @@ public class ArticleRepository {
         return findById(id).orElseThrow();
     }
 
+    @Transactional
     public void delete(int id) {
         jdbc.update("DELETE FROM article WHERE id = ?", id);
     }
