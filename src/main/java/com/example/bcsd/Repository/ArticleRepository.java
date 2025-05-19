@@ -21,7 +21,6 @@ public class ArticleRepository {
             Article a = new Article();
             a.setId(rs.getInt("id"));
             a.setBoardId(rs.getInt("board_id"));
-            // author_id를 문자열로 매핑
             a.setAuthor(String.valueOf(rs.getInt("author_id")));
             a.setTitle(rs.getString("title"));
             a.setContent(rs.getString("content"));
