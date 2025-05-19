@@ -1,24 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
   <meta charset="UTF-8" />
-  <title th:text="${boardName}">게시판</title>
-
+  <title>Board Posts</title>
 </head>
 <body>
-
-<h1 th:text="${boardName}">자유게시판</h1>
-
-<div th:each="article : ${articles}" class="post">
-  <h2 th:text="${article.title}">제목</h2>
-  <div class="post-meta">
-    <span th:text="${article.author}"></span> |
-    <span th:text="${article.writeDateTime}"></span>
-  </div>
-  <div class="post-content" th:text="${article.content}">
-  </div>
-</div>
-
+<h1>Board: <span th:text="${boardName}">Board Name</span></h1>
+<ul>
+  <li th:each="article : ${articles}">
+    <a th:href="@{/articles/{id}(id=${article.id})}"
+       th:text="${article.title}">Article Title</a>
+  </li>
+</ul>
 </body>
 </html>

@@ -20,24 +20,25 @@ public class Article {
         this.writeDateTime = writeDateTime;
     }
 
-    public int getArticleId() {
-        return articleId;
+    public Article(int articleId, String author, int boardId,
+                   String title, String content,
+                   String writeDateTime, String modifyDateTime) {
+        this.articleId = articleId;
+        this.author = author;
+        this.boardId = boardId;
+        this.title = title;
+        this.content = content;
+        this.writeDateTime = writeDateTime;
+        this.modifyDateTime = modifyDateTime;
     }
-    public String getAuthor() {
-        return author;
-    }
-    public int getBoardId() {
-        return boardId;
-    }
-    public String getTitle() {
-        return title;
-    }
-    public String getContent() {
-        return content;
-    }
-    public String getWriteDateTime() {
-        return writeDateTime;
-    }
+
+    public int getArticleId() {return articleId;}
+    public String getAuthor() {return author;}
+    public int getBoardId() {return boardId;}
+    public String getTitle() {return title;}
+    public String getContent() {return content;}
+    public String getWriteDateTime() {return writeDateTime;}
+    public String getModifyDateTime() {return modifyDateTime;}
 
     public void setId(int id) {this.articleId = id;}
     public void setAuthor(String author) {
@@ -46,9 +47,7 @@ public class Article {
         }
         this.author = author;
     }
-    public void setBoardId(int boardId) {
-        this.boardId = boardId;
-    }
+    public void setBoardId(int boardId) {this.boardId = boardId;}
     public void setTitle(String title) {
         if (title == null || title.isEmpty()) {
             throw new RuntimeException();
@@ -61,8 +60,7 @@ public class Article {
         }
         this.content = content;
     }
-    public void setWriteDateTime(String writeDateTime) {
-        this.writeDateTime = writeDateTime;
-    }
+    public void setWriteDateTime(String writeDateTime) {this.writeDateTime = writeDateTime;}
+    public void setModifyDateTime(String modifyDateTime) {this.modifyDateTime = modifyDateTime;}
 
 }

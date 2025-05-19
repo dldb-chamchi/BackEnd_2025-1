@@ -1,23 +1,29 @@
 package com.example.bcsd.Service;
 
-import com.example.bcsd.Model.Board;
-import com.example.bcsd.Repository.BoardRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.NoSuchElementException;
+import org.springframework.transaction.annotation.Transactional;
+import com.example.bcsd.Dao.BoardDao;
+import com.example.bcsd.Dto.ArticleDto;
+import com.example.bcsd.Dto.BoardPostsDto;
 
 @Service
+
 public class BoardService {
-    private final BoardRepository boardRepository;
+
+    private final BoardDao boardDao;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
+    public BoardService(BoardDao boardDao) {
+        this.boardDao = boardDao;
     }
 
-    public Board getBoardById(int id) {
-        return boardRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(""));
+    @Transactional(readOnly = true)
+    public BoardPostsDto getPostsByBoardId(Long boardId) {
+        String boardName = boardDao.findBoardNameById(boardId);
+        List<ArticleDto> articles = boardDao.findArticlesByBoardId(boardId);
+        return new BoardPostsDto(boardName, articles);
     }
-
 }

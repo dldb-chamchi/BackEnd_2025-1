@@ -1,25 +1,28 @@
 package com.example.bcsd.Controller;
 
-import com.example.bcsd.Service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.example.bcsd.Service.BoardService;
+import com.example.bcsd.Dto.BoardPostsDto;
 
 @Controller
 public class PostsController {
-    private final ArticleService service;
+
+    private final BoardService boardService;
 
     @Autowired
-    public PostsController(ArticleService service) {
-        this.service = service;
+    public PostsController(BoardService boardService) {
+        this.boardService = boardService;
     }
 
     @GetMapping("/posts")
-    public String listPosts(Model model) {
-        model.addAttribute("boardName", "자유게시판");
-        model.addAttribute("articles", service.getAllArticles());
+    public String posts(@RequestParam("boardId") Long boardId, Model model) {
+        BoardPostsDto dto = boardService.getPostsByBoardId(boardId);
+        model.addAttribute("boardName", dto.getBoardName());
+        model.addAttribute("articles", dto.getArticles());
         return "posts";
     }
-
 }
