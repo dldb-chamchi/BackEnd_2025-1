@@ -32,4 +32,5 @@ public class BoardRepository {
         );
         return list.stream().findFirst();
     }
+
 }
