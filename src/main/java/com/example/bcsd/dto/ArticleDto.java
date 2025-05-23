@@ -1,4 +1,4 @@
-package com.example.bcsd.Dto;
+package com.example.bcsd.dto;
 
 public class ArticleDto {
     private Long id;
@@ -10,7 +10,6 @@ public class ArticleDto {
     }
 
     public Long getId() {return id;}
-
     public String getTitle() {return title;}
 
 }
