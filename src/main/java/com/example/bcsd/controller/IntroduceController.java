@@ -1,4 +1,4 @@
-package com.example.bcsd.Controller;
+package com.example.bcsd.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

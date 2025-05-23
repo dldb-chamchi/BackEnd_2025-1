@@ -1,6 +1,6 @@
-package com.example.bcsd.Repository;
+package com.example.bcsd.repository;
 
-import com.example.bcsd.Model.Article;
+import com.example.bcsd.model.Article;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

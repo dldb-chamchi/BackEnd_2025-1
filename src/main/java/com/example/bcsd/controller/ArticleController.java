@@ -1,7 +1,7 @@
-package com.example.bcsd.Controller;
+package com.example.bcsd.controller;
 
-import com.example.bcsd.Model.Article;
-import com.example.bcsd.Service.ArticleService;
+import com.example.bcsd.model.Article;
+import com.example.bcsd.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

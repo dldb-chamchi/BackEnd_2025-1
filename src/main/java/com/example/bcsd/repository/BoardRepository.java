@@ -5,6 +5,7 @@ import com.example.bcsd.dto.ArticleDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -27,6 +28,7 @@ public class BoardRepository {
         return jdbc.query(sql, boardRowMapper());
     }
 
+    @Transactional
     public void save(Board b) {
         if (b.getBoardId() == 0) {
             jdbc.update("INSERT INTO board(name) VALUES(?)", b.getBoardTitle());
@@ -35,6 +37,7 @@ public class BoardRepository {
         }
     }
 
+    @Transactional
     public void deleteById(Long id) {
         jdbc.update("DELETE FROM board WHERE id = ?", id);
     }
@@ -59,4 +62,5 @@ public class BoardRepository {
                 rs.getString("name")
         );
     }
+
 }

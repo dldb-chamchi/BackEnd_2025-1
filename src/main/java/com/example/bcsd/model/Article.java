@@ -1,9 +1,9 @@
-package com.example.bcsd.Model;
+package com.example.bcsd.model;
 
 public class Article {
     private int articleId;
     private String author;
-    private int boardId;
+    private long boardId;
     private String title;
     private String content;
     private String writeDateTime;
@@ -20,9 +20,7 @@ public class Article {
         this.writeDateTime = writeDateTime;
     }
 
-    public Article(int articleId, String author, int boardId,
-                   String title, String content,
-                   String writeDateTime, String modifyDateTime) {
+    public Article(int articleId, String author, int boardId, String title, String content, String writeDateTime, String modifyDateTime) {
         this.articleId = articleId;
         this.author = author;
         this.boardId = boardId;
@@ -34,7 +32,7 @@ public class Article {
 
     public int getArticleId() {return articleId;}
     public String getAuthor() {return author;}
-    public int getBoardId() {return boardId;}
+    public long getBoardId() {return boardId;}
     public String getTitle() {return title;}
     public String getContent() {return content;}
     public String getWriteDateTime() {return writeDateTime;}
@@ -47,7 +45,7 @@ public class Article {
         }
         this.author = author;
     }
-    public void setBoardId(int boardId) {this.boardId = boardId;}
+    public void setBoardId(long boardId) {this.boardId = boardId;}
     public void setTitle(String title) {
         if (title == null || title.isEmpty()) {
             throw new RuntimeException();

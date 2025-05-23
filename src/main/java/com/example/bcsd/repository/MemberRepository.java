@@ -4,6 +4,7 @@ import com.example.bcsd.model.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +43,7 @@ public class MemberRepository {
         return cnt != null && cnt > 0;
     }
 
+    @Transactional
     public Member save(Member m) {
         String sql = "INSERT INTO member(name, email, password) VALUES(?,?,?)";
         jdbc.update(sql, m.getName(), m.getEmail(), m.getPassword());
@@ -49,12 +51,14 @@ public class MemberRepository {
         return findById(newId).orElseThrow();
     }
 
+    @Transactional
     public Member update(int id, Member m) {
         String sql = "UPDATE member SET name = ?, email = ?, password = ? WHERE id = ?";
         jdbc.update(sql, m.getName(), m.getEmail(), m.getPassword(), id);
         return findById(id).orElseThrow();
     }
 
+    @Transactional
     public void deleteById(int id) {
         String sql = "DELETE FROM member WHERE id = ?";
         jdbc.update(sql, id);
@@ -68,4 +72,5 @@ public class MemberRepository {
                 rs.getString("password")
         );
     }
+
 }
