@@ -1,4 +1,8 @@
-package com.example.bcsd.Exception;
+package com.example.bcsd.exception;
 
-public class BadRequestException {
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
+        super(message);
+    }
+
 }
