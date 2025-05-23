@@ -1,12 +1,12 @@
-package com.example.bcsd.Controller;
+package com.example.bcsd.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.example.bcsd.Service.BoardService;
-import com.example.bcsd.Dto.BoardPostsDto;
+import com.example.bcsd.service.BoardService;
+import com.example.bcsd.dto.BoardPostsDto;
 
 @Controller
 public class PostsController {
@@ -25,4 +25,5 @@ public class PostsController {
         model.addAttribute("articles", dto.getArticles());
         return "posts";
     }
+
 }
