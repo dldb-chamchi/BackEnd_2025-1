@@ -1,4 +1,4 @@
-package com.example.bcsd.Dto;
+package com.example.bcsd.dto;
 import java.util.List;
 
 public class BoardPostsDto {
@@ -10,12 +10,7 @@ public class BoardPostsDto {
         this.articles = articles;
     }
 
-    public String getBoardName() {
-        return boardName;
-    }
-
-    public List<ArticleDto> getArticles() {
-        return articles;
-    }
+    public String getBoardName() {return boardName;}
+    public List<ArticleDto> getArticles() {return articles;}
 
 }
