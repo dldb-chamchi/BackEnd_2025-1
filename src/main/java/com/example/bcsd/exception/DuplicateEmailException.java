@@ -1,4 +1,8 @@
-package com.example.bcsd.Exception;
+package com.example.bcsd.exception;
 
-public class DuplicateEmailException {
+public class DuplicateEmailException extends RuntimeException {
+    public DuplicateEmailException(String message) {
+        super(message);
+    }
+
 }
