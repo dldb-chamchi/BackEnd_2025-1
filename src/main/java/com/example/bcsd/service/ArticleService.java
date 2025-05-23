@@ -1,49 +1,85 @@
-package com.example.bcsd.Service;
+package com.example.bcsd.service;
 
-import com.example.bcsd.Model.Article;
-import com.example.bcsd.Repository.ArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.bcsd.exception.BadRequestException;
+import com.example.bcsd.exception.ResourceNotFoundException;
+import com.example.bcsd.model.Article;
+import com.example.bcsd.repository.ArticleRepository;
+import com.example.bcsd.repository.BoardRepository;
+import com.example.bcsd.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository repository;
+    private final ArticleRepository articleRepo;
+    private final MemberRepository memberRepo;
+    private final BoardRepository boardRepo;
 
-    @Autowired
-    public ArticleService(ArticleRepository repository) {
-        this.repository = repository;
+    public ArticleService(ArticleRepository repo, MemberRepository memberRepo, BoardRepository boardRepo) {
+        this.articleRepo = repo;
+        this.memberRepo = memberRepo;
+        this.boardRepo  = boardRepo;
     }
 
     @Transactional(readOnly = true)
-    public List<Article> getAllArticles() { //모든 아티클 보기
-        return repository.findAll();
+    public List<Article> getAllArticles() {
+        return articleRepo.findAll();
     }
 
     @Transactional(readOnly = true)
     public Article getArticleById(int id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(""));
+        return articleRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 아티클을 찾을 수 없음: " + id));
     }
 
     @Transactional
-    public Article createArticle(Article article) {
-        return repository.save(article);
+    public Article createArticle(Article a) {
+        if (a.getAuthor()==null || a.getTitle()==null || a.getContent()==null) throw new BadRequestException("요청에 Null 값이 존재함");
+
+        int authId = Integer.parseInt(a.getAuthor());
+        if (!memberRepo.existsById(authId)) throw new BadRequestException("참조된 회원이 존재하지 않음: " + authId);
+
+        if (!boardRepo.findById(a.getBoardId()).isPresent()) throw new BadRequestException("참조된 게시판이 존재하지 않음: " + a.getBoardId());
+
+        return articleRepo.save(a);
     }
 
     @Transactional
-    public Article updateArticle(int id, Article article) {
-        getArticleById(id);
-        return repository.update(id, article);
+    public Article updateArticle(int id, Article a) {
+        Article existing = getArticleById(id);
+
+        if (a.getAuthor() == null || a.getAuthor().isBlank()) throw new BadRequestException("author가 누락됨");
+
+        if (a.getTitle() == null   || a.getTitle().isBlank()) throw new BadRequestException("title이 누락됨");
+
+        if (a.getContent() == null || a.getContent().isBlank()) throw new BadRequestException("content가 누락됨");
+
+
+        int authId;
+        try {
+            authId = Integer.parseInt(a.getAuthor());
+        }
+        catch (NumberFormatException e) {
+            throw new BadRequestException("author는 숫자여야함: " + a.getAuthor());
+        }
+        if (!memberRepo.existsById(authId)) throw new BadRequestException("존재하지 않는 사용자: " + authId);
+
+
+        if (!boardRepo.findById(a.getBoardId()).isPresent()) throw new BadRequestException("존재하지 않는 게시판: " + a.getBoardId());
+
+        existing.setAuthor(a.getAuthor());
+        existing.setBoardId(a.getBoardId());
+        existing.setTitle(a.getTitle());
+        existing.setContent(a.getContent());
+
+        return articleRepo.update(id, existing);
     }
 
     @Transactional
     public void deleteArticle(int id) {
         getArticleById(id);
-        repository.delete(id);
+        articleRepo.delete(id);
     }
 
 }
