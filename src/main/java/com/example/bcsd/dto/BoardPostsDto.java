@@ -11,6 +11,7 @@ public class BoardPostsDto {
     }
 
     public String getBoardName() {return boardName;}
+
     public List<ArticleDto> getArticles() {return articles;}
 
 }

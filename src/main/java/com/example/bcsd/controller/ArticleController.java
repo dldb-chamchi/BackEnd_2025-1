@@ -57,7 +57,6 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         try {
-            service.getArticleById(id);
             service.deleteArticle(id);
             return ResponseEntity.noContent().build();
         }

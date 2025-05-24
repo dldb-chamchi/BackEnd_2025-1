@@ -62,9 +62,8 @@ public class ArticleRepository {
     }
 
     public Article save(Article a) {
-        jdbc.update(
-                "INSERT INTO article(author_id, board_id, title, content) VALUES (?,?,?,?)",
-                Integer.parseInt(a.getAuthor()),  // author 필드에 ID 문자열이 담긴 경우
+        jdbc.update("INSERT INTO article(author_id, board_id, title, content) VALUES (?,?,?,?)",
+                Integer.parseInt(a.getAuthor()),
                 a.getBoardId(),
                 a.getTitle(),
                 a.getContent()
@@ -75,10 +74,7 @@ public class ArticleRepository {
 
     @Transactional
     public Article update(int id, Article a) {
-        jdbc.update(
-                "UPDATE article SET title = ?, content = ? WHERE id = ?",
-                a.getTitle(), a.getContent(), id
-        );
+        jdbc.update("UPDATE article SET title = ?, content = ? WHERE id = ?", a.getTitle(), a.getContent(), id);
         return findById(id).orElseThrow();
     }
 

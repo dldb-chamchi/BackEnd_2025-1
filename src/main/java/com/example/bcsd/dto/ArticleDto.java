@@ -10,6 +10,7 @@ public class ArticleDto {
     }
 
     public Long getId() {return id;}
+
     public String getTitle() {return title;}
 
 }
