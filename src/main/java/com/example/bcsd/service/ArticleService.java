@@ -35,9 +35,9 @@ public class ArticleService {
 
     @Transactional
     public Article createArticle(Article a) {
-        if (a.getAuthor()==null || a.getTitle()==null || a.getContent()==null) throw new BadRequestException("요청에 Null 값이 존재함");
+        if (a.getAuthorId()==null || a.getTitle()==null || a.getContent()==null) throw new BadRequestException("요청에 Null 값이 존재함");
 
-        int authId = Integer.parseInt(a.getAuthor());
+        int authId = a.getAuthorId();
         if (!memberRepo.existsById(authId)) throw new BadRequestException("참조된 회원이 존재하지 않음: " + authId);
 
         if (!boardRepo.findById(a.getBoardId()).isPresent()) throw new BadRequestException("참조된 게시판이 존재하지 않음: " + a.getBoardId());
@@ -49,7 +49,7 @@ public class ArticleService {
     public Article updateArticle(int id, Article a) {
         Article existing = getArticleById(id);
 
-        if (a.getAuthor() == null || a.getAuthor().isBlank()) throw new BadRequestException("author가 누락됨");
+        if (a.getAuthorId() == null) throw new BadRequestException("author가 누락됨");
 
         if (a.getTitle() == null   || a.getTitle().isBlank()) throw new BadRequestException("title이 누락됨");
 
@@ -58,17 +58,17 @@ public class ArticleService {
 
         int authId;
         try {
-            authId = Integer.parseInt(a.getAuthor());
+            authId = a.getAuthorId();
         }
         catch (NumberFormatException e) {
-            throw new BadRequestException("author는 숫자여야함: " + a.getAuthor());
+            throw new BadRequestException("author는 숫자여야함: " + a.getAuthorId());
         }
         if (!memberRepo.existsById(authId)) throw new BadRequestException("존재하지 않는 사용자: " + authId);
 
 
         if (!boardRepo.findById(a.getBoardId()).isPresent()) throw new BadRequestException("존재하지 않는 게시판: " + a.getBoardId());
 
-        existing.setAuthor(a.getAuthor());
+        existing.setAuthorId(a.getAuthorId());
         existing.setBoardId(a.getBoardId());
         existing.setTitle(a.getTitle());
         existing.setContent(a.getContent());

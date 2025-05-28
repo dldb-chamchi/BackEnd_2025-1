@@ -36,7 +36,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
         boardRepository.findById(boardId).orElseThrow(() -> new ResourceNotFoundException("해당 게시판이 존재하지 않으므로 삭제 불가함: " + boardId));
 
-        if (!articleRepository.findByBoardId(boardId.intValue()).isEmpty()) throw new BadRequestException("게시판 " + boardId + "을 지울 수 없음, 게시글이 존재함");
+        if (!articleRepository.findByBoardId((long) boardId.intValue()).isEmpty()) throw new BadRequestException("게시판 " + boardId + "을 지울 수 없음, 게시글이 존재함");
 
         boardRepository.deleteById(boardId);
     }

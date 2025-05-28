@@ -53,10 +53,9 @@ public class MemberService {
     @Transactional
     public void deleteMember(int id) {
         getMemberById(id);
-        if (!articleRepo.findByBoardId(id).isEmpty()) {
+        if (!articleRepo.findByBoardId((long) id).isEmpty()) {
             throw new BadRequestException("회원 " + id + "을 지울 수 없음, 게시글이 존재함");
         }
         memberRepo.deleteById(id);
     }
-
 }
