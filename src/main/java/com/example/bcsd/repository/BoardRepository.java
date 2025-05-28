@@ -1,66 +1,66 @@
 package com.example.bcsd.repository;
 
-import com.example.bcsd.model.Board;
 import com.example.bcsd.dto.ArticleDto;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.example.bcsd.model.Board;
+import com.example.bcsd.model.Article;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
+@Transactional(readOnly = true)
 public class BoardRepository {
-    private final JdbcTemplate jdbc;
-
-    public BoardRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     public Optional<Board> findById(Long id) {
-        String sql = "SELECT id, name FROM board WHERE id = ?";
-        List<Board> list = jdbc.query(sql, boardRowMapper(), id);
-        return list.stream().findFirst();
+        return Optional.ofNullable(em.find(Board.class, id));
     }
 
     public List<Board> findAll() {
-        String sql = "SELECT id, name FROM board";
-        return jdbc.query(sql, boardRowMapper());
+        return em.createQuery("SELECT b FROM Board b", Board.class)
+                .getResultList();
     }
 
     @Transactional
-    public void save(Board b) {
-        if (b.getBoardId() == 0) {
-            jdbc.update("INSERT INTO board(name) VALUES(?)", b.getBoardTitle());
+    public Board save(Board board) {
+        if (board.getBoardId() == null) {
+            em.persist(board);
+            return board;
         } else {
-            jdbc.update("UPDATE board SET name = ? WHERE id = ?", b.getBoardTitle(), b.getBoardId());
+            return em.merge(board);
         }
     }
 
     @Transactional
     public void deleteById(Long id) {
-        jdbc.update("DELETE FROM board WHERE id = ?", id);
+        Board b = em.find(Board.class, id);
+        if (b == null) {
+            throw new RuntimeException("삭제할 Board가 없음: " + id);
+        }
+        em.remove(b);
     }
 
-    public String findBoardNameById(Long boardId) {
-        String sql = "SELECT name FROM board WHERE id = ?";
-        return jdbc.queryForObject(sql, String.class, boardId);
+    public String findBoardNameById(Long id) {
+        Board b = em.find(Board.class, id);
+        if (b == null) {
+            throw new RuntimeException("존재하지 않는 Board: " + id);
+        }
+        return b.getBoardTitle();
     }
 
     public List<ArticleDto> findArticlesByBoardId(Long boardId) {
-        String sql = "SELECT id, title FROM article WHERE board_id = ?";
-        return jdbc.query(sql, (rs, rn) ->
-                new ArticleDto(rs.getLong("id"),
-                        rs.getString("title")
-                ), boardId
-        );
-    }
+        List<Article> list = em.createQuery("SELECT a FROM Article a WHERE a.boardId = :boardId", Article.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
 
-    private RowMapper<Board> boardRowMapper() {
-        return (rs, rowNum) -> new Board(
-                rs.getInt("id"),
-                rs.getString("name")
-        );
+        return list.stream()
+                .map(a -> new ArticleDto((long)a.getArticleId(), a.getTitle()))
+                .collect(Collectors.toList());
     }
-
 }
