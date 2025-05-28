@@ -1,86 +1,57 @@
 package com.example.bcsd.repository;
 
 import com.example.bcsd.model.Article;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional(readOnly = true)
 public class ArticleRepository {
-    private final JdbcTemplate jdbc;
-
-    public ArticleRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     public List<Article> findAll() {
-        String sql = "SELECT id, board_id, author_id, title, content, created_date, modified_date FROM article";
-        return jdbc.query(sql, (rs, rn) -> {
-            Article a = new Article();
-            a.setId(rs.getInt("id"));
-            a.setBoardId(rs.getInt("board_id"));
-            a.setAuthor(String.valueOf(rs.getInt("author_id")));
-            a.setTitle(rs.getString("title"));
-            a.setContent(rs.getString("content"));
-            a.setWriteDateTime(rs.getString("created_date"));
-            a.setModifyDateTime(rs.getString("modified_date"));
-            return a;
-        });
+        return em.createQuery("SELECT a FROM Article a", Article.class)
+                .getResultList();
     }
 
-    public Optional<Article> findById(int id) {
-        String sql = "SELECT id, board_id, author_id, title, content, created_date, modified_date FROM article WHERE id = ?";
-        return jdbc.query(sql, (rs, rn) -> {
-            Article a = new Article();
-            a.setId(rs.getInt("id"));
-            a.setBoardId(rs.getInt("board_id"));
-            a.setAuthor(String.valueOf(rs.getInt("author_id")));
-            a.setTitle(rs.getString("title"));
-            a.setContent(rs.getString("content"));
-            a.setWriteDateTime(rs.getString("created_date"));
-            a.setModifyDateTime(rs.getString("modified_date"));
-            return a;
-        }, id).stream().findFirst();
+    public Optional<Article> findById(Integer id) {
+        return Optional.ofNullable(em.find(Article.class, id));
     }
 
-    public List<Article> findByBoardId(int boardId) {
-        String sql = "SELECT id, board_id, author_id, title, content, created_date, modified_date FROM article WHERE board_id = ?";
-        return jdbc.query(sql, (rs, rn) -> {
-            Article a = new Article();
-            a.setId(rs.getInt("id"));
-            a.setBoardId(rs.getInt("board_id"));
-            a.setAuthor(String.valueOf(rs.getInt("author_id")));
-            a.setTitle(rs.getString("title"));
-            a.setContent(rs.getString("content"));
-            a.setWriteDateTime(rs.getString("created_date"));
-            a.setModifyDateTime(rs.getString("modified_date"));
-            return a;
-        }, boardId);
-    }
-
-    public Article save(Article a) {
-        jdbc.update("INSERT INTO article(author_id, board_id, title, content) VALUES (?,?,?,?)",
-                Integer.parseInt(a.getAuthor()),
-                a.getBoardId(),
-                a.getTitle(),
-                a.getContent()
-        );
-        Integer newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
-        return findById(newId).orElseThrow();
+    public List<Article> findByBoardId(Long boardId) {
+        return em.createQuery("SELECT a FROM Article a WHERE a.boardId = :boardId", Article.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
     }
 
     @Transactional
-    public Article update(int id, Article a) {
-        jdbc.update("UPDATE article SET title = ?, content = ? WHERE id = ?", a.getTitle(), a.getContent(), id);
-        return findById(id).orElseThrow();
+    public Article save(Article article) {
+        if (article.getArticleId() == null) {
+            em.persist(article);
+            return article;
+        }
+        else {
+            return em.merge(article);
+        }
     }
 
     @Transactional
-    public void delete(int id) {
-        jdbc.update("DELETE FROM article WHERE id = ?", id);
+    public Article update(Integer id, Article article) {
+        return em.merge(article);
     }
 
+    @Transactional
+    public void delete(Integer id) {
+        Article a = em.find(Article.class, id);
+        if (a == null) {
+            throw new RuntimeException("삭제할 Article이 없음: " + id);
+        }
+        em.remove(a);
+    }
 }
