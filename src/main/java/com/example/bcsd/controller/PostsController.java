@@ -1,29 +1,24 @@
 package com.example.bcsd.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.bcsd.responseDto.BoardPostsResponseDto;
+import com.example.bcsd.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.example.bcsd.service.BoardService;
-import com.example.bcsd.dto.BoardPostsDto;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PostsController {
-
     private final BoardService boardService;
 
-    @Autowired
     public PostsController(BoardService boardService) {
         this.boardService = boardService;
     }
 
     @GetMapping("/posts")
     public String posts(@RequestParam("boardId") Long boardId, Model model) {
-        BoardPostsDto dto = boardService.getPostsByBoardId(boardId);
+        BoardPostsResponseDto dto = boardService.getPostsByBoardId(boardId);
         model.addAttribute("boardName", dto.getBoardName());
         model.addAttribute("articles", dto.getArticles());
         return "posts";
     }
-
 }

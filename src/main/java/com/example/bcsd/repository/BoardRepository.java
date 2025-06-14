@@ -1,8 +1,8 @@
 package com.example.bcsd.repository;
 
-import com.example.bcsd.dto.ArticleDto;
 import com.example.bcsd.model.Board;
 import com.example.bcsd.model.Article;
+import com.example.bcsd.responseDto.ArticleResponseDto;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,13 +54,22 @@ public class BoardRepository {
         return b.getBoardTitle();
     }
 
-    public List<ArticleDto> findArticlesByBoardId(Long boardId) {
-        List<Article> list = em.createQuery("SELECT a FROM Article a WHERE a.boardId = :boardId", Article.class)
+    public List<ArticleResponseDto> findArticlesByBoardId(Long boardId) {
+        List<Article> list = em.createQuery(
+                        "SELECT a FROM Article a WHERE a.boardId = :boardId", Article.class)
                 .setParameter("boardId", boardId)
                 .getResultList();
 
         return list.stream()
-                .map(a -> new ArticleDto((long)a.getArticleId(), a.getTitle()))
+                .map(a -> new ArticleResponseDto(
+                        a.getArticleId().longValue(),
+                        a.getAuthorId().longValue(),
+                        a.getBoardId(),
+                        a.getTitle(),
+                        a.getContent(),
+                        a.getWriteDateTime(),
+                        a.getModifyDateTime()
+                ))
                 .collect(Collectors.toList());
     }
 }
