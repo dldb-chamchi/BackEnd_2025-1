@@ -17,6 +17,7 @@ public class Article {
     @Column(name = "author_id", nullable = false)
     private Long authorId;
 
+    //Board, Article 연관관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
