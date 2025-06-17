@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findByBoard_BoardId(Long boardId);
     List<Article> findByAuthorId(Long authorId);
 }
