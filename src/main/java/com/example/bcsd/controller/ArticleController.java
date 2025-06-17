@@ -4,6 +4,7 @@ import com.example.bcsd.requestDto.ArticleRequestDto;
 import com.example.bcsd.responseDto.ArticleResponseDto;
 import com.example.bcsd.model.Article;
 import com.example.bcsd.service.ArticleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/articles")
+@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService service;
-
-    public ArticleController(ArticleService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<List<ArticleResponseDto>> getAll() {
@@ -29,7 +27,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleResponseDto> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ArticleResponseDto> getById(@PathVariable Long id) {
         return service.getArticleById(id)
                 .map(this::toResponse)
                 .map(ResponseEntity::ok)
@@ -47,7 +45,7 @@ public class ArticleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ArticleResponseDto> update(
-            @PathVariable("id") Long id,
+            @PathVariable Long id,
             @RequestBody ArticleRequestDto req
     ) {
         return service.updateArticle(id, req)
@@ -57,19 +55,17 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        if (service.deleteArticle(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return service.deleteArticle(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 
     private ArticleResponseDto toResponse(Article a) {
         return new ArticleResponseDto(
-                a.getArticleId().longValue(),
-                a.getAuthorId().longValue(),
-                a.getBoardId(),
+                a.getArticleId(),
+                a.getAuthorId(),
+                a.getBoard().getBoardId(),  // <-- 여기 수정
                 a.getTitle(),
                 a.getContent(),
                 a.getWriteDateTime(),
