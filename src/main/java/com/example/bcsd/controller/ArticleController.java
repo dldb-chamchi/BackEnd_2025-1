@@ -57,15 +57,14 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return service.deleteArticle(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+                ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
     private ArticleResponseDto toResponse(Article a) {
         return new ArticleResponseDto(
                 a.getArticleId(),
                 a.getAuthorId(),
-                a.getBoard().getBoardId(),  // <-- 여기 수정
+                a.getBoard().getBoardId(),
                 a.getTitle(),
                 a.getContent(),
                 a.getWriteDateTime(),
