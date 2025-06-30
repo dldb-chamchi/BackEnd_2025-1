@@ -7,6 +7,7 @@ import com.example.bcsd.exception.DuplicateEmailException;
 import com.example.bcsd.repository.ArticleRepository;
 import com.example.bcsd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepo;
     private final ArticleRepository articleRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Optional<Member> getMemberById(Long id) {
@@ -31,7 +33,8 @@ public class MemberService {
         if (memberRepo.existsByEmail(req.getEmail())) {
             throw new DuplicateEmailException("이메일이 이미 존재함: " + req.getEmail());
         }
-        Member m = new Member(req.getName(), req.getEmail(), req.getPassword());
+        String encoded = passwordEncoder.encode(req.getPassword());
+        Member m = new Member(req.getName(), req.getEmail(), encoded);
         return memberRepo.save(m);
     }
 
@@ -49,7 +52,9 @@ public class MemberService {
                             });
                     m.setName(req.getName());
                     m.setEmail(req.getEmail());
-                    m.setPassword(req.getPassword());
+                    if (req.getPassword() != null) {
+                        m.setPassword(passwordEncoder.encode(req.getPassword()));
+                    }
                     return m;
                 });
     }

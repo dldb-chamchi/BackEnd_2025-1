@@ -34,13 +34,11 @@ public class Board {
         this.boardTitle = boardTitle;
     }
 
-    //자식 추가
     public void addArticle(Article a) {
         articles.add(a);
         a.setBoard(this);
     }
 
-    //자식 제거
     public void removeArticle(Article a) {
         articles.remove(a);
         a.setBoard(null);
