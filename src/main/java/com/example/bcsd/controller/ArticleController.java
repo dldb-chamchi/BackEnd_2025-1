@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class ArticleController {
     private final ArticleService service;
 
+    //github 실험 주석
+
     @GetMapping
     public ResponseEntity<List<ArticleResponseDto>> getAll() {
         List<ArticleResponseDto> dtos = service.getAllArticles().stream()
