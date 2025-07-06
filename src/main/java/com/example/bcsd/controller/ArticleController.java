@@ -19,6 +19,7 @@ public class ArticleController {
     private final ArticleService service;
 
     //github 실험 주석
+    //github 실험 주석2
 
     @GetMapping
     public ResponseEntity<List<ArticleResponseDto>> getAll() {
