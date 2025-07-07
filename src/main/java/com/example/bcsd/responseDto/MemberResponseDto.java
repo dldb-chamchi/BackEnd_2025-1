@@ -1,5 +1,8 @@
 package com.example.bcsd.responseDto;
 
+import lombok.Getter;
+
+@Getter
 public class MemberResponseDto {
     private Long id;
     private String name;
@@ -13,8 +16,4 @@ public class MemberResponseDto {
         this.password = password;
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
 }
