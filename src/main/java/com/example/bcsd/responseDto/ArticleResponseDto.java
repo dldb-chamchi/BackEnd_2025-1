@@ -1,5 +1,8 @@
 package com.example.bcsd.responseDto;
 
+import lombok.Getter;
+
+@Getter
 public class ArticleResponseDto {
     private Long id;
     private Long authorId;
@@ -21,11 +24,4 @@ public class ArticleResponseDto {
         this.modifyDateTime = modifyDateTime;
     }
 
-    public Long getId() { return id; }
-    public Long getAuthorId() { return authorId; }
-    public Long getBoardId() { return boardId; }
-    public String getTitle() { return title; }
-    public String getContent() { return content; }
-    public String getWriteDateTime() { return writeDateTime; }
-    public String getModifyDateTime() { return modifyDateTime; }
 }
